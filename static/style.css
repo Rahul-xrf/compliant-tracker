@@ -1,0 +1,162 @@
+body {
+    background: linear-gradient(135deg, #f79216c9 0%, #ff4c4c 100%);
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+}
+
+.form-container {
+    max-width: 600px;
+    margin: 48px auto;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-card {
+    background: #232323;
+    color: #fff;
+    border-radius: 32px;
+    box-shadow: 0 8px 32px 0 rgba(0,0,0,0.22);
+    padding: 48px 40px 40px 40px;
+    width: 100%;
+    max-width: 600px;
+    position: relative;
+}
+
+.form-card h2 {
+    color: #FF8C00;
+    text-align: center;
+    margin-bottom: 24px;
+    font-size: 2.5em;
+    font-weight: 700;
+    letter-spacing: 1px;
+    position: relative;
+    padding-bottom: 8px;
+}
+
+.form-card h2::after {
+    content: '';
+    display: block;
+    margin: 0 auto;
+    margin-top: 8px;
+    width: 60px;
+    height: 4px;
+    background: #FF8C00;
+    border-radius: 2px;
+}
+
+.flash-message {
+    background: #191919;
+    color: #fff;
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 32px;
+    text-align: center;
+    font-size: 1.2em;
+    font-weight: 500;
+    border: 1px solid #333;
+}
+
+.form-group {
+    margin-bottom: 32px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-bottom: 32px;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1.1em;
+}
+
+input[type="text"], select, textarea {
+    width: 100%;
+    padding: 18px 20px;
+    border: 2px solid #333;
+    border-radius: 16px;
+    font-size: 1.1em;
+    background: #191919;
+    color: #fff;
+    transition: border-color 0.2s;
+    font-weight: 400;
+    box-sizing: border-box;
+}
+
+input[type="file"] {
+    margin-top: 8px;
+    color: #fff;
+}
+
+input[type="text"]::placeholder, textarea::placeholder {
+    color: #888;
+    font-weight: 400;
+}
+
+input[type="text"]:focus, select:focus, textarea:focus {
+    border-color: #FF8C00;
+    outline: none;
+}
+
+textarea {
+    height: 120px;
+    resize: vertical;
+    margin-bottom: 0;
+}
+
+.form-actions {
+    width: 100%;
+    max-width: 100%;
+    padding: 0 8px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+}
+
+button {
+    background: #FF8C00;
+    color: #fff;
+    border: none;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 1.2em;
+    padding: 18px 0;
+    margin-top: 32px;
+    width: 100%;
+    max-width: 100%;
+    box-shadow: 0 4px 16px rgba(255, 140, 0, 0.08);
+    transition: background 0.2s, box-shadow 0.2s;
+    text-transform: none;
+    letter-spacing: 0.5px;
+    display: block;
+}
+
+button:hover {
+    background: #FFA500;
+    box-shadow: 0 8px 20px rgba(255, 140, 0, 0.18);
+}
+
+@media (max-width: 700px) {
+    .form-card {
+        padding: 24px 8px 24px 8px;
+        border-radius: 18px;
+    }
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+    .form-card h2 {
+        font-size: 1.5em;
+    }
+    .form-actions {
+        padding: 0;
+    }
+} 

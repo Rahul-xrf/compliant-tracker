@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-card">
+            <h2>Complaint Management Dashboard</h2>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for category, message in messages %}
+                            <div class="flash-message {{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            <div class="controls">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search complaints..." 
+                           onkeyup="window.location.href='?search=' + this.value">
+                </div>
+                <div>
+                    <select onchange="window.location.href='?status_filter=' + this.value">
+                        <option value="all" {% if current_filter == 'all' %}selected{% endif %}>All Status</option>
+                        <option value="Pending" {% if current_filter == 'Pending' %}selected{% endif %}>Pending</option>
+                        <option value="In Progress" {% if current_filter == 'In Progress' %}selected{% endif %}>In Progress</option>
+                        <option value="Resolved" {% if current_filter == 'Resolved' %}selected{% endif %}>Resolved</option>
+                    </select>
+                </div>
+                <div>
+                    <select onchange="window.location.href='?sort_by=' + this.value">
+                        <option value="timestamp" {% if current_sort == 'timestamp' %}selected{% endif %}>Sort by Date</option>
+                        <option value="priority" {% if current_sort == 'priority' %}selected{% endif %}>Sort by Priority</option>
+                    </select>
+                </div>
+            </div>
+
+            {% if complaints %}
+                {% for c in complaints %}
+                    <div class="complaint-card">
+                        <div class="complaint-header">
+                            <div class="complaint-title">
+                                <h3>{{ c.name }} - {{ c.department }}</h3>
+                                <div class="complaint-meta">
+                                    <span>📅 Submitted: {{ c.timestamp }}</span>
+                                    {% if c.last_updated %}
+                                        <span>🔄 Updated: {{ c.last_updated }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div>
+                                <span class="status-badge status-{{ c.status.replace(' ', '-') }}">
+                                    {% if c.status == 'Pending' %}⏳{% endif %}
+                                    {% if c.status == 'In Progress' %}🔄{% endif %}
+                                    {% if c.status == 'Resolved' %}✅{% endif %}
+                                    {{ c.status }}
+                                </span>
+                                <span class="priority-{{ c.priority }}">
+                                    {% if c.priority == 'High' %}🔴{% endif %}
+                                    {% if c.priority == 'Medium' %}🟡{% endif %}
+                                    {% if c.priority == 'Low' %}🟢{% endif %}
+                                    {{ c.priority }} Priority
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="complaint-content">
+                            <p><strong>Category:</strong> {{ c.category }}</p>
+                            <p><strong>Description:</strong> {{ c.description }}</p>
+                            {% if c.notes %}
+                                <p><strong>Notes:</strong> {{ c.notes }}</p>
+                            {% endif %}
+                        </div>
+
+                        <div class="update-form">
+                            <form method="POST" action="/update/{{ c.id }}">
+                                <div class="form-row">
+                                    <select name="status">
+                                        <option value="Pending" {% if c.status == 'Pending' %}selected{% endif %}>Pending</option>
+                                        <option value="In Progress" {% if c.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+                                        <option value="Resolved" {% if c.status == 'Resolved' %}selected{% endif %}>Resolved</option>
+                                    </select>
+                                    <button type="submit">Update Status</button>
+                                </div>
+                                <div class="form-row">
+                                    <textarea name="notes" placeholder="Add notes here...">{{ c.notes or '' }}</textarea>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <h3>No complaints found</h3>
+                    <p>There are no complaints matching your current filters.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html> 
