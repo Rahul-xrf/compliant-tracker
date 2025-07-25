@@ -5,8 +5,8 @@ body {
     min-height: 100vh;
 }
 
-.form-container {
-    max-width: 600px;
+.form-container, .admin-container {
+    max-width: 700px;
     margin: 48px auto;
     padding: 0 16px;
     display: flex;
@@ -14,18 +14,18 @@ body {
     justify-content: center;
 }
 
-.form-card {
+.form-card, .admin-card {
     background: #232323;
     color: #fff;
     border-radius: 32px;
     box-shadow: 0 8px 32px 0 rgba(0,0,0,0.22);
     padding: 48px 40px 40px 40px;
     width: 100%;
-    max-width: 600px;
+    max-width: 700px;
     position: relative;
 }
 
-.form-card h2 {
+.form-card h2, .admin-card h2 {
     color: #FF8C00;
     text-align: center;
     margin-bottom: 24px;
@@ -36,7 +36,7 @@ body {
     padding-bottom: 8px;
 }
 
-.form-card h2::after {
+.form-card h2::after, .admin-card h2::after {
     content: '';
     display: block;
     margin: 0 auto;
@@ -63,7 +63,7 @@ body {
     margin-bottom: 32px;
 }
 
-.form-grid {
+.form-grid, .controls {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 32px;
@@ -78,7 +78,7 @@ label {
     font-size: 1.1em;
 }
 
-input[type="text"], select, textarea {
+input[type="text"], input[type="password"], select, textarea {
     width: 100%;
     padding: 18px 20px;
     border: 2px solid #333;
@@ -96,12 +96,12 @@ input[type="file"] {
     color: #fff;
 }
 
-input[type="text"]::placeholder, textarea::placeholder {
+input[type="text"]::placeholder, input[type="password"]::placeholder, textarea::placeholder {
     color: #888;
     font-weight: 400;
 }
 
-input[type="text"]:focus, select:focus, textarea:focus {
+input[type="text"]:focus, input[type="password"]:focus, select:focus, textarea:focus {
     border-color: #FF8C00;
     outline: none;
 }
@@ -144,16 +144,167 @@ button:hover {
     box-shadow: 0 8px 20px rgba(255, 140, 0, 0.18);
 }
 
-@media (max-width: 700px) {
-    .form-card {
-        padding: 24px 8px 24px 8px;
+.complaint-card {
+    background: #191919;
+    border-radius: 18px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.10);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.complaint-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.18);
+}
+
+.complaint-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #333;
+}
+
+.complaint-title h3 {
+    color: #FF8C00;
+    font-size: 1.3em;
+    margin-bottom: 5px;
+}
+
+.complaint-meta {
+    color: #bbb;
+    font-size: 0.95em;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.status-badge {
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.9em;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-right: 10px;
+}
+
+.status-Pending {
+    background-color: #444;
+    color: #A9A9A9;
+}
+.status-In-Progress {
+    background-color: #FF8C00;
+    color: #fff;
+}
+.status-Resolved {
+    background-color: #2ecc40;
+    color: #fff;
+}
+
+.priority-High {
+    color: #FF8C00;
+    font-weight: 600;
+    margin-left: 10px;
+}
+.priority-Medium {
+    color: #A9A9A9;
+    font-weight: 600;
+    margin-left: 10px;
+}
+.priority-Low {
+    color: #808080;
+    font-weight: 600;
+    margin-left: 10px;
+}
+
+.complaint-content {
+    margin-bottom: 20px;
+}
+
+.complaint-content p {
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+.complaint-content strong {
+    color: #fff;
+    font-weight: 500;
+}
+
+.update-form {
+    background: #232323;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+.update-form select, .update-form textarea {
+    background: #222;
+    color: #fff;
+    border: 2px solid #444;
+    border-radius: 10px;
+    padding: 10px 15px;
+    font-size: 1em;
+    margin-bottom: 10px;
+}
+
+.update-form button {
+    background: #FF8C00;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 1em;
+    padding: 10px 25px;
+    margin-top: 10px;
+    box-shadow: 0 4px 16px rgba(255, 140, 0, 0.08);
+    transition: background 0.3s, box-shadow 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.update-form button:hover {
+    background: #FFA500;
+    box-shadow: 0 8px 20px rgba(255, 140, 0, 0.18);
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px;
+    color: #bbb;
+}
+
+.logout-btn {
+    background: #FF8C00;
+    color: #fff;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 22px;
+    text-decoration: none;
+    margin-left: 10px;
+    transition: background 0.2s;
+    box-shadow: 0 2px 8px rgba(255, 140, 0, 0.08);
+}
+.logout-btn:hover {
+    background: #FFA500;
+    color: #fff;
+}
+
+@media (max-width: 900px) {
+    .form-card, .admin-card {
+        padding: 20px;
         border-radius: 18px;
     }
-    .form-grid {
+    .form-grid, .controls {
         grid-template-columns: 1fr;
         gap: 18px;
     }
-    .form-card h2 {
+    .form-card h2, .admin-card h2 {
         font-size: 1.5em;
     }
     .form-actions {
