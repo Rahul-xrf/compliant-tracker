@@ -63,6 +63,10 @@ body {
     margin-bottom: 32px;
 }
 
+.form-group:last-of-type {
+    margin-bottom: 10px;
+}
+
 .form-grid, .controls {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -118,30 +122,64 @@ textarea {
     padding: 0 8px;
     margin: 0 auto;
     display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
 }
 
-button {
+.secondary-btn, .admin-btn {
+    display: block;
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.2em;
+    padding: 18px 0;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto 18px auto;
+    border-radius: 14px;
+    letter-spacing: 0.5px;
+    transition: background 0.2s, color 0.2s;
+}
+.secondary-btn {
+    background: #FF8C00;
+    color: #fff;
+    border: none;
+    box-shadow: 0 4px 16px rgba(255, 140, 0, 0.08);
+}
+.secondary-btn:hover {
+    background: #FFA500;
+    color: #fff;
+}
+.admin-btn {
+    background: transparent;
+    color: #FF8C00;
+    border: 2px solid #FF8C00;
+    box-shadow: none;
+}
+.admin-btn:hover {
+    background: #FF8C00;
+    color: #fff;
+}
+
+button[type="submit"] {
     background: #FF8C00;
     color: #fff;
     border: none;
     border-radius: 14px;
     font-weight: 700;
-    font-size: 1.2em;
-    padding: 18px 0;
-    margin-top: 32px;
+    font-size: 1.5em;
+    padding: 24px 0;
     width: 100%;
-    max-width: 100%;
-    box-shadow: 0 4px 16px rgba(255, 140, 0, 0.08);
-    transition: background 0.2s, box-shadow 0.2s;
-    text-transform: none;
-    letter-spacing: 0.5px;
+    max-width: 400px;
+    margin: 16px auto 0 auto;
     display: block;
+    transition: background 0.2s, box-shadow 0.2s;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 16px rgba(255, 140, 0, 0.08);
 }
-
-button:hover {
+button[type="submit"]:hover {
     background: #FFA500;
-    box-shadow: 0 8px 20px rgba(255, 140, 0, 0.18);
+    color: #fff;
 }
 
 .complaint-card {
@@ -295,6 +333,98 @@ button:hover {
     color: #fff;
 }
 
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+}
+.modal-content {
+    background: #232323;
+    margin: 60px auto;
+    padding: 40px 32px 32px 32px;
+    border-radius: 32px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 8px 32px 0 rgba(0,0,0,0.22);
+    position: relative;
+    color: #fff;
+    animation: fadeIn 0.2s;
+}
+.close {
+    color: #FF8C00;
+    position: absolute;
+    top: 18px;
+    right: 28px;
+    font-size: 2em;
+    font-weight: 700;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+.close:hover {
+    color: #FFA500;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.custom-file-upload {
+    display: inline-block;
+    padding: 14px 28px;
+    background: #FF8C00;
+    color: #fff;
+    font-weight: 600;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-top: 10px;
+}
+.custom-file-upload:hover {
+    background: #FFA500;
+}
+.custom-file-upload input[type="file"] {
+    display: none;
+}
+#file-upload-text {
+    margin-left: 10px;
+    font-weight: 400;
+    color: #fff;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px #191919 inset !important;
+    box-shadow: 0 0 0 1000px #191919 inset !important;
+    -webkit-text-fill-color: #fff !important;
+    color: #fff !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+.back-btn {
+    display: inline-block;
+    color: #FF8C00;
+    font-weight: 700;
+    font-size: 1.1em;
+    text-decoration: none;
+    margin-bottom: 18px;
+    margin-top: 4px;
+    margin-left: 2px;
+    transition: color 0.2s;
+}
+.back-btn:hover {
+    color: #FFA500;
+    text-decoration: underline;
+}
+
 @media (max-width: 900px) {
     .form-card, .admin-card {
         padding: 20px;
@@ -310,4 +440,43 @@ button:hover {
     .form-actions {
         padding: 0;
     }
+} 
+
+.themed-toast {
+    position: fixed;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #232323;
+    color: #fff;
+    padding: 24px 40px 24px 32px;
+    border-radius: 18px;
+    box-shadow: 0 8px 32px 0 rgba(255,140,0,0.18);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    font-size: 1.3em;
+    font-weight: 600;
+    min-width: 320px;
+    max-width: 90vw;
+    justify-content: center;
+    gap: 18px;
+    border: 2px solid #FF8C00;
+}
+.toast-message.success {
+    color: #FFA500;
+}
+.toast-message.error {
+    color: #ff4c4c;
+}
+.toast-close {
+    color: #FF8C00;
+    font-size: 1.5em;
+    font-weight: 700;
+    margin-left: 18px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+.toast-close:hover {
+    color: #FFA500;
 } 

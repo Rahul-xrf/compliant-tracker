@@ -115,6 +115,7 @@ complaints = []
 UPLOAD_FOLDER = 'static/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'pdf'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024  # 10 MB
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -123,6 +124,10 @@ def allowed_file(filename):
 @app.route('/')
 def home():
     return render_template('login.html')
+
+@app.route('/complaint')
+def complaint():
+    return render_template('index.html')
 
 @app.route('/submit', methods=['POST'])
 def submit():
@@ -137,6 +142,12 @@ def submit():
             file = request.files['evidence']
             if file and file.filename != '':
                 if allowed_file(file.filename):
+                    file.seek(0, 2)  # Seek to end of file
+                    file_length = file.tell()
+                    file.seek(0)  # Reset pointer
+                    if file_length > app.config['MAX_CONTENT_LENGTH']:
+                        flash('File is too large. Maximum allowed size is 10 MB.', 'error')
+                        return redirect(url_for('complaint'))
                     if not os.path.exists(app.config['UPLOAD_FOLDER']):
                         os.makedirs(app.config['UPLOAD_FOLDER'])
                     filename = secure_filename(file.filename)
@@ -144,7 +155,7 @@ def submit():
                     file_url = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 else:
                     flash('File type not allowed. Please upload an image or PDF.', 'error')
-                    return redirect(url_for('home'))
+                    return redirect(url_for('complaint'))
         # Handle "Other" category
         if category == 'Other':
             other_category = request.form.get('otherCategory')
@@ -165,6 +176,10 @@ def submit():
         flash('Complaint submitted successfully!', 'success')
     except Exception as e:
         flash('Error submitting complaint. Please try again.', 'error')
+    return redirect(url_for('complaint'))
+
+@app.route('/back-from-complaint')
+def back_from_complaint():
     return redirect(url_for('home'))
 
 if __name__ == '__main__':

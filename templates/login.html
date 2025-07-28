@@ -8,7 +8,6 @@
 <body>
     <div class="form-container">
         <div class="form-card">
-            <h2>Login</h2>
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     <div class="flash-messages">
@@ -18,6 +17,18 @@
                     </div>
                 {% endif %}
             {% endwith %}
+            <h2>Welcome</h2>
+            <div class="form-actions">
+                <button class="secondary-btn" onclick="window.location.href='/complaint'">Complaints / Issues</button>
+                <button class="admin-btn" onclick="openModal()">Admin Login</button>
+            </div>
+        </div>
+    </div>
+    <!-- Modal for admin login -->
+    <div id="adminModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Admin Login</h2>
             <form method="POST" action="/login">
                 <div class="form-group">
                     <label for="username">Username</label>
@@ -33,5 +44,19 @@
             </form>
         </div>
     </div>
+    <script>
+    function openModal() {
+        document.getElementById('adminModal').style.display = 'block';
+    }
+    function closeModal() {
+        document.getElementById('adminModal').style.display = 'none';
+    }
+    window.onclick = function(event) {
+        var modal = document.getElementById('adminModal');
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    }
+    </script>
 </body>
 </html> 

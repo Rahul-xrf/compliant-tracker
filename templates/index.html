@@ -8,14 +8,22 @@
 <body>
     <div class="form-container">
         <div class="form-card">
+            <a href="/back-from-complaint" class="back-btn">&larr; Back</a>
             <h2>Student Complaint Portal</h2>
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
-                    <div class="flash-messages">
+                    <div id="toast" class="themed-toast">
                         {% for category, message in messages %}
-                            <div class="flash-message {{ category }}">{{ message }}</div>
+                            <span class="toast-message {{ category }}">{{ message }}</span>
                         {% endfor %}
+                        <span class="toast-close" onclick="closeToast()">&times;</span>
                     </div>
+                    <script>
+                    function closeToast() {
+                        document.getElementById('toast').style.display = 'none';
+                    }
+                    setTimeout(closeToast, 3000);
+                    </script>
                 {% endif %}
             {% endwith %}
             <form method="POST" action="/submit" enctype="multipart/form-data">
@@ -64,8 +72,17 @@
                 </div>
                 <div class="form-group">
                     <label for="evidence">Upload Evidence (image or PDF)</label>
-                    <input type="file" id="evidence" name="evidence" accept="image/*,application/pdf">
+                    <label class="custom-file-upload">
+                        <input type="file" id="evidence" name="evidence" accept="image/*,application/pdf" onchange="updateFileName(this)">
+                        <span id="file-upload-text">Choose file</span>
+                    </label>
                 </div>
+                <script>
+                    function updateFileName(input) {
+                        const fileName = input.files[0] ? input.files[0].name : "Choose file";
+                        document.getElementById('file-upload-text').textContent = fileName;
+                    }
+                </script>
                 <div class="form-actions">
                     <button type="submit">Submit Complaint</button>
                 </div>
