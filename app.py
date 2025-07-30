@@ -116,6 +116,7 @@ UPLOAD_FOLDER = 'static/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'pdf'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024  # 10 MB
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://admin:Alienx2357@complaint-db.cc7okgok4f7i.us-east-1.rds.amazonaws.com:3306/complaint_system'
 
 def allowed_file(filename):
     return '.' in filename and \
