@@ -4,6 +4,9 @@ from werkzeug.utils import secure_filename
 from datetime import datetime
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import mysql.connector
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 app = Flask(__name__)
 app.secret_key = 'your-secret-key-here'  # Required for flash messages
@@ -102,6 +105,25 @@ def admin():
                          current_filter=status_filter,
                          current_sort=sort_by)
 
+def send_resolution_email(to_email, student_name):
+    sender_email = 'your_email@gmail.com'  # Replace with your email
+    sender_password = 'your_app_password'  # Use an app password or env var
+    subject = 'Your Complaint Has Been Resolved'
+    body = f"Dear {student_name},\n\nYour complaint has been resolved by the admin.\n\nBest regards,\nAdmin Team"
+    msg = MIMEMultipart()
+    msg['From'] = sender_email
+    msg['To'] = to_email
+    msg['Subject'] = subject
+    msg.attach(MIMEText(body, 'plain'))
+    try:
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        server.login(sender_email, sender_password)
+        server.sendmail(sender_email, to_email, msg.as_string())
+        server.quit()
+    except Exception as e:
+        print('Failed to send email:', e)
+
 @app.route('/update/<int:id>', methods=['POST'])
 def update(id):
     try:
@@ -113,6 +135,14 @@ def update(id):
         """
         values = (status, notes, id)
         cursor.execute(sql, values)
+        # Fetch email and name if resolved
+        if status == 'Resolved':
+            cursor2 = conn.cursor(dictionary=True)
+            cursor2.execute("SELECT email, name FROM complaints WHERE id=%s", (id,))
+            result = cursor2.fetchone()
+            cursor2.close()
+            if result and result['email']:
+                send_resolution_email(result['email'], result['name'])
         conn.commit()
         cursor.close()
         flash('Complaint updated successfully!', 'success')
@@ -145,6 +175,7 @@ def complaint():
 def submit():
     try:
         name = request.form['name']
+        email = request.form['email']
         department = request.form['department']
         category = request.form['category']
         description = request.form['description']
@@ -176,10 +207,10 @@ def submit():
                 category = f"Other: {other_category}"
         cursor = conn.cursor()
         sql = """
-            INSERT INTO complaints (name, department, category, description, priority, status, file_url)
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO complaints (name, email, department, category, description, priority, status, file_url)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
         """
-        values = (name, department, category, description, priority, 'Pending', file_url)
+        values = (name, email, department, category, description, priority, 'Pending', file_url)
         cursor.execute(sql, values)
         conn.commit()
         cursor.close()
@@ -194,4 +225,4 @@ def back_from_complaint():
     return redirect(url_for('home'))
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)

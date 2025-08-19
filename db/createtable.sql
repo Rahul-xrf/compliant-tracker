@@ -16,6 +16,7 @@ CREATE TABLE complaints (
 );
 
 ALTER TABLE complaints ADD COLUMN file_url VARCHAR(255);
+ALTER TABLE complaints ADD COLUMN email VARCHAR(255);
 
 SHOW DATABASES;
 SHOW TABLES;
