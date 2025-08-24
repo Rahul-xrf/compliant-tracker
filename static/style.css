@@ -95,14 +95,31 @@ input[type="text"], input[type="password"], select, textarea {
     box-sizing: border-box;
 }
 
+input[type="email"] {
+    width: 100%;
+    padding: 18px 20px;
+    border: 2px solid #333;
+    border-radius: 16px;
+    font-size: 1.1em;
+    background: #191919;
+    color: #fff;
+    transition: border-color 0.2s;
+    font-weight: 400;
+    box-sizing: border-box;
+    margin-bottom: 0;
+}
+input[type="email"]:focus {
+    border-color: #FF8C00;
+    outline: none;
+}
+input[type="email"]::placeholder {
+    color: #888;
+    font-weight: 400;
+}
+
 input[type="file"] {
     margin-top: 8px;
     color: #fff;
-}
-
-input[type="text"]::placeholder, input[type="password"]::placeholder, textarea::placeholder {
-    color: #888;
-    font-weight: 400;
 }
 
 input[type="text"]:focus, input[type="password"]:focus, select:focus, textarea:focus {
