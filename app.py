@@ -1,3 +1,5 @@
+from dotenv import load_dotenv
+load_dotenv()
 import os
 from flask import Flask, render_template, request, redirect, url_for, flash
 from werkzeug.utils import secure_filename
@@ -57,10 +59,10 @@ def logout():
 
 # MySQL connection setup
 conn = mysql.connector.connect(
-    host="complaint-db.cc7okgok4f7i.us-east-1.rds.amazonaws.com",
-    user="admin",
-    password="Alienx2357",
-    database="complaint_system"
+    host=os.getenv("DB_HOST"),
+    user=os.getenv("DB_USER"),
+    password=os.getenv("DB_PASSWORD"),
+    database=os.getenv("DB_NAME")
 )
 
 # Protect admin route
