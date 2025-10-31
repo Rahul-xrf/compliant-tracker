@@ -107,24 +107,29 @@ def admin():
                          current_filter=status_filter,
                          current_sort=sort_by)
 
-def send_resolution_email(to_email, student_name):
-    sender_email = 'your_email@gmail.com'  # Replace with your email
-    sender_password = 'your_app_password'  # Use an app password or env var
-    subject = 'Your Complaint Has Been Resolved'
-    body = f"Dear {student_name},\n\nYour complaint has been resolved by the admin.\n\nBest regards,\nAdmin Team"
+# --- EMAIL HELPER (use for both confirmation and resolution emails) ---
+def send_email(to_email, subject, body):
+    sender_email = os.environ.get('compliant.tracker@gmail.com')  # Gmail address
+    sender_password = os.environ.get('qcqt fwoo pafl pgvh')  # Gmail app password
     msg = MIMEMultipart()
     msg['From'] = sender_email
     msg['To'] = to_email
     msg['Subject'] = subject
     msg.attach(MIMEText(body, 'plain'))
     try:
-        server = smtplib.SMTP('smtp.gmail.com', 587)
-        server.starttls()
-        server.login(sender_email, sender_password)
-        server.sendmail(sender_email, to_email, msg.as_string())
-        server.quit()
+        with smtplib.SMTP('smtp.gmail.com', 587) as server:
+            server.starttls()
+            server.login(sender_email, sender_password)
+            server.send_message(msg)
+        print(f"✅ Email sent to {to_email}")
     except Exception as e:
-        print('Failed to send email:', e)
+        print(f"❌ Error sending email: {e}")
+
+# For backward compatibility, keep existing send_resolution_email but call new helper
+def send_resolution_email(to_email, student_name):
+    subject = 'Your Complaint Has Been Resolved'
+    body = f"Dear {student_name},\n\nYour complaint has been resolved by the admin.\n\nBest regards,\nComplaint Tracker Team"
+    send_email(to_email, subject, body)
 
 @app.route('/update/<int:id>', methods=['POST'])
 def update(id):
@@ -216,6 +221,12 @@ def submit():
         cursor.execute(sql, values)
         conn.commit()
         cursor.close()
+        # --- Send confirmation email after submit ---
+        subject = "Complaint Received - Complaint Tracker"
+        body = (f"Dear {name},\n\nYour complaint has been submitted successfully. "
+                "Our team will review and update you once it is resolved.\n\n"
+                "Thank you!\n- Complaint Tracker Team")
+        send_email(email, subject, body)
         flash('Complaint submitted successfully!', 'success')
     except Exception as e:
         print('Error in /submit:', e)
