@@ -1,19 +1,21 @@
-FROM python:3.11-slim
+FROM python:3.9
 
-# Create and switch to a non-root user
+# Create a non-root user for safety
 RUN useradd -m appuser
-USER appuser
 WORKDIR /home/appuser/app
 
-# Copy requirements and install
-COPY requirements.txt .
-RUN pip install --no-cache-dir --user -r requirements.txt
+# Copy your project files
+COPY --chown=appuser:appuser . .
 
-# Copy rest of the code
-COPY . .
+# Install dependencies globally (no PATH warning)
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir --user -r requirements.txt && \
+    ln -s /home/appuser/.local/bin/* /usr/local/bin/
 
-# Expose port
+# Switch to non-root user
+USER appuser
+
 EXPOSE 5000
 
-# Run app
+# Run Gunicorn (production server)
 CMD ["gunicorn", "-w", "3", "-b", "0.0.0.0:5000", "app:app"]
