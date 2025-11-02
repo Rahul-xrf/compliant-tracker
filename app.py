@@ -109,8 +109,8 @@ def admin():
 
 # --- EMAIL HELPER (use for both confirmation and resolution emails) ---
 def send_email(to_email, subject, body):
-    sender_email = os.environ.get('compliant.tracker@gmail.com')  # Gmail address
-    sender_password = os.environ.get('qcqt fwoo pafl pgvh')  # Gmail app password
+    sender_email = os.environ.get('TRACKER_EMAIL')
+    sender_password = os.environ.get('TRACKER_EMAIL_PASSWORD')
     msg = MIMEMultipart()
     msg['From'] = sender_email
     msg['To'] = to_email
