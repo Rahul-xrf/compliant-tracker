@@ -22,7 +22,7 @@ jobs:
           source: "./"
           target: "~/compliant-tracker"
 
-      - name: Deploy and restart Docker container
+      - name: Run commands on EC2
         uses: appleboy/ssh-action@v0.1.7
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -30,6 +30,9 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd ~/compliant-tracker
-            sudo docker stop $(sudo docker ps -q) || true
             sudo docker build -t complaint-tracker .
+            # Stop and remove any old containers on port 5000
+            sudo docker stop $(sudo docker ps -q --filter "publish=5000") || true
+            sudo docker rm $(sudo docker ps -aq --filter "publish=5000") || true
+            # Run the new one
             sudo docker run -d -p 5000:5000 complaint-tracker
