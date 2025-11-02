@@ -3,7 +3,7 @@ name: Deploy to EC2
 on:
   push:
     branches:
-      - main  # Trigger when pushing to main branch
+      - main  # Run automatically on push to main
 
 jobs:
   deploy:
@@ -22,7 +22,7 @@ jobs:
           source: "./"
           target: "~/compliant-tracker"
 
-      - name: Run commands on EC2
+      - name: Build and restart container on EC2
         uses: appleboy/ssh-action@v0.1.7
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -30,16 +30,16 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd ~/compliant-tracker
-            sudo docker build -t complaint-tracker .
+            
+            # Create isolated environment for pip (prevents root warning)
+            python3 -m venv venv
+            source venv/bin/activate
 
-            # Stop and remove existing containers on port 5000 if any
-            CONTAINER_ID=$(sudo docker ps -q --filter "publish=5000")
-            if [ ! -z "$CONTAINER_ID" ]; then
-              echo "Stopping existing container..."
-              sudo docker stop $CONTAINER_ID
-              sudo docker rm $CONTAINER_ID
-            fi
-            # Remove unused images (optional but keeps EC2 clean)
+            # Ensure Docker is clean
+            sudo docker stop $(sudo docker ps -q --filter "publish=5000") || true
+            sudo docker rm $(sudo docker ps -aq --filter "publish=5000") || true
             sudo docker system prune -f
-            # Run the new container
+
+            # Build new image and run container
+            sudo docker build -t complaint-tracker .
             sudo docker run -d -p 5000:5000 complaint-tracker
